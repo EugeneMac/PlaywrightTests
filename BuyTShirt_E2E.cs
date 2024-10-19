@@ -3,6 +3,7 @@ using Microsoft.Playwright;
 namespace PlaywrightTests
 {
     [TestFixture]
+    [SetCulture("en-US")]
     public class BuyTShirtTests: BasePage
     {
         private Shop _shop;
@@ -82,12 +83,12 @@ namespace PlaywrightTests
             Assert.That((await _page.Locator(Selectors.shippingInformation).InnerTextAsync()), Is.EqualTo("Free Pony Express Delivery!"));
             Assert.That((await _page.Locator(Selectors.subTotal).InnerTextAsync()), Does.Contain("Item total:").And.Contain(_productPrice));
 
-            var itemPrice = Double.Parse(_productPrice.Substring(1).Replace(".", ","));
+            var itemPrice = Double.Parse(_productPrice.Substring(1));
             var tax = Math.Round(itemPrice * 0.08, 2);
             var total = itemPrice + tax;
 
-            Assert.That((await _page.Locator(Selectors.tax).InnerTextAsync()), Does.Contain("Tax: $").And.Contain(tax.ToString().Replace(",", ".")));
-            Assert.That((await _page.Locator(Selectors.total).InnerTextAsync()), Does.Contain("Total: $").And.Contain(total.ToString().Replace(",", ".")));
+            Assert.That((await _page.Locator(Selectors.tax).InnerTextAsync()), Does.Contain("Tax: $").And.Contain(tax.ToString()));
+            Assert.That((await _page.Locator(Selectors.total).InnerTextAsync()), Does.Contain("Total: $").And.Contain(total.ToString()));
 
             await _checkout.Finish();
 
