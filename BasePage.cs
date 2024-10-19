@@ -30,8 +30,8 @@ namespace PlaywrightTests
         }
         public async void Dispose()
         {
-            await _context.CloseAsync();
-            await _browser.CloseAsync();
+            //await _context.CloseAsync();
+            //await _browser.CloseAsync();
         }
     }
 }
