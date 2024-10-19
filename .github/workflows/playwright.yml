@@ -8,27 +8,16 @@ on:
     secrets:
       secret:
         required: true
-    outputs:
-      set:
-        value: ${{ jobs.check-secret.outputs.set }}
 jobs:
   test:
     timeout-minutes: 60
     runs-on: windows-latest
     steps:
-     - name: Check if secret is set
-       id: check-secret
-       run: |
-          if [ "${{ secrets.secret }}" != "" ]; then
-            echo "set=true" >> $GITHUB_OUTPUT
-          fi
-       shell: bash
-
-     - name: Show result
-       run: |
-          echo "set: ${{ steps.check-secret.outputs.set }}"
-       shell: bash
-
+     - name: check MY_SECRET exists
+       env: 
+            super_secret: ${{ secrets.MY_SECRET }}
+       if: ${{ env.super_secret == '' }}
+       run: 'echo "echo the secret \"MY_SECRET\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"'
      - uses: actions/checkout@v4
      - name: Setup dotnet
        uses: actions/setup-dotnet@v4
