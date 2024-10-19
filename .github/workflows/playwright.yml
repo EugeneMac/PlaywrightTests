@@ -4,38 +4,39 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:
-    inputs:
-      password:
+  workflow_call:
+    secrets:
+      secret:
         required: true
-        type: string
+    outputs:
+      set:
+        value: ${{ jobs.check-secret.outputs.set }}
 jobs:
-  check_password:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Verify password
-      run: |
-        set -e
-        echo "Verifying password..."
-        INPUT_PASSWORD=$(jq -r '.inputs.password' $GITHUB_EVENT_PATH) >> $GITHUB_ENV
-        INPUT_PASSWORD_HASH=$(echo -n "$INPUT_PASSWORD" | sha256sum | awk '{print $1}')
-        if [[ "$INPUT_PASSWORD_HASH" == "c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2" ]]; then
-          echo "Password verification successful."
-        else
-          echo "Password verification failed."
-          exit 1
   test:
     timeout-minutes: 60
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
-      with:
+     - name: Check if secret is set
+       id: check-secret
+       run: |
+          if [ "${{ secrets.secret }}" != "" ]; then
+            echo "set=true" >> $GITHUB_OUTPUT
+          fi
+       shell: bash
+
+     - name: Show result
+       run: |
+          echo "set: ${{ steps.check-secret.outputs.set }}"
+       shell: bash
+
+     - uses: actions/checkout@v4
+     - name: Setup dotnet
+       uses: actions/setup-dotnet@v4
+       with:
         dotnet-version: 8.0.x
-    - name: Build & Install
-      run: dotnet build
-    - name: Ensure browsers are installed
-      run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
-    - name: Run your tests
-      run: dotnet test
+     - name: Build & Install
+       run: dotnet build
+     - name: Ensure browsers are installed
+       run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+     - name: Run your tests
+       run: dotnet test
