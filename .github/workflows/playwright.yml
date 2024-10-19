@@ -17,7 +17,8 @@ jobs:
        env: 
             super_secret: ${{ secrets.MYSECRET }}
        if: ${{ env.super_secret == '' }}
-       run: echo "echo the secret \"MY_SECRET\" has not been made; echo please go to \"settings \> secrets \> actions\" to create it"
+       run: echo "the secret MYSECRET has not been made"
+       shell: cmd
      - uses: actions/checkout@v4
      - name: Setup dotnet
        uses: actions/setup-dotnet@v4
