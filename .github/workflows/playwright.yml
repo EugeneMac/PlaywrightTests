@@ -4,7 +4,26 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      password:
+        required: true
+        type: string
 jobs:
+  check_password:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Verify password
+      run: |
+        set -e
+        echo "Verifying password..."
+        INPUT_PASSWORD=$(jq -r '.inputs.password' $GITHUB_EVENT_PATH) >> $GITHUB_ENV
+        INPUT_PASSWORD_HASH=$(echo -n "$INPUT_PASSWORD" | sha256sum | awk '{print $1}')
+        if [[ "$INPUT_PASSWORD_HASH" == "c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2" ]]; then
+          echo "Password verification successful."
+        else
+          echo "Password verification failed."
+          exit 1
   test:
     timeout-minutes: 60
     runs-on: windows-latest
