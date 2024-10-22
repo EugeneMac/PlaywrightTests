@@ -18,15 +18,15 @@ jobs:
     runs-on: windows-latest
     steps:
      - run: | 
-         echo "user: $USERNAME"
+         echo ${{ inputs.user }}
          echo "password: $PASSWORD"
          echo "secret user: $SECRET_USER"
          echo "secret password: $SECRET_PASSWORD"
        env: 
-         USERNAME: ${{inputs.user}}
-         PASSWORD: ${{inputs.password}}
-         SECRET_USER: ${{secrets.USER}}
-         SECRET_PASSWORD: ${{secrets.PASSWORD}}
+         USERNAME: ${{ inputs.user }}
+         PASSWORD: ${{ inputs.password }}
+         SECRET_USER: ${{ secrets.USER }}
+         SECRET_PASSWORD: ${{ secrets.PASSWORD }}
      - uses: actions/checkout@v4
      - name: Setup dotnet
        uses: actions/setup-dotnet@v4
@@ -37,4 +37,4 @@ jobs:
      - name: Ensure browsers are installed
        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
      - name: Run your tests
-       run: dotnet test --environment SAUCE_USERNAME="$USERNAME" --environment SAUCE_PASSWORD="$PASSWORD" --environment SECRET_USER="$SECRET_USER" --environment SECRET_PASSWORD="$SECRET_PASSWORD"
+       run: dotnet test --environment SAUCE_USERNAME=${{ inputs.user }} --environment SAUCE_PASSWORD=${{ inputs.password }} --environment SECRET_USER=${{ secrets.USER }} --environment SECRET_PASSWORD=${{ secrets.PASSWORD }}
