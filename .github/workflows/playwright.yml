@@ -4,19 +4,37 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      user:
+        description: 'enter user name'
+        required: true
+      password:
+        description: 'enter user password'
+        required: true
 jobs:
   test:
     timeout-minutes: 60
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup dotnet
-      uses: actions/setup-dotnet@v4
-      with:
+     - run: | 
+         echo "user: $USERNAME"
+         echo "password: $PASSWORD"
+         echo "secret user: $SECRET_USER"
+         echo "secret password: $SECRET_PASSWORD"
+       env: 
+         USERNAME: ${{inputs.user}}
+         PASSWORD: ${{inputs.password}}
+         SECRET_USER: ${{secrets.USER}}
+         SECRET_PASSWORD: ${{secrets.PASSWORD}}
+     - uses: actions/checkout@v4
+     - name: Setup dotnet
+       uses: actions/setup-dotnet@v4
+       with:
         dotnet-version: 8.0.x
-    - name: Build & Install
-      run: dotnet build
-    - name: Ensure browsers are installed
-      run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
-    - name: Run your tests
-      run: dotnet test
+     - name: Build & Install
+       run: dotnet build
+     - name: Ensure browsers are installed
+       run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+     - name: Run your tests
+       run: dotnet test --environment SAUCE_USERNAME="$USERNAME" --environment SAUCE_PASSWORD="$PASSWORD" --environment SECRET_USER="$SECRET_USER" --environment SECRET_PASSWORD="$SECRET_PASSWORD"
