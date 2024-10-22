@@ -16,8 +16,8 @@ namespace PlaywrightTests
             {
                 var username = Environment.GetEnvironmentVariable("SAUCE_USERNAME");
                 var secret_user = Environment.GetEnvironmentVariable("SECRET_USER");
-                if (username != null) return username;
-                if (secret_user != null) return secret_user;
+                if (username != null && username != "") return username;
+                if (secret_user != null && username != "") return secret_user;
                 else return ConfigurationManager.AppSettings["user"]; ;
             }
         }
@@ -27,8 +27,8 @@ namespace PlaywrightTests
             {
                 var pass = Environment.GetEnvironmentVariable("SAUCE_PASSWORD");
                 var secret_pass = Environment.GetEnvironmentVariable("SECRET_PASSWORD");
-                if (pass != null) return pass;
-                if (secret_pass != null) return secret_pass;
+                if (pass != null && pass != "") return pass;
+                if (secret_pass != null && pass != "") return secret_pass;
                 else return ConfigurationManager.AppSettings["password"]; ;
             }
         }
