@@ -7,8 +7,8 @@ namespace PlaywrightTests
         public async Task<Shop> LogIn()
         {
             await NavigateTo(Settings.baseLink);
-            await _page.Locator(Selectors.userNameInput).FillAsync(Settings.userName);
-            await _page.Locator(Selectors.userPassInput).FillAsync(Settings.userPass);
+            await _page.Locator(Selectors.userNameInput).FillAsync(user);
+            await _page.Locator(Selectors.userPassInput).FillAsync(password);
             await _page.Locator(Selectors.loginButton).ClickAsync();
             await _page.WaitForLoadStateAsync(LoadState.NetworkIdle);
             return this;

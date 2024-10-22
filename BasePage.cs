@@ -1,13 +1,37 @@
 ﻿using Microsoft.Playwright;
+using System.Configuration;
 
 namespace PlaywrightTests
 {
-    public class BasePage: IDisposable
+    public class BasePage
     {
         public static IBrowserContext _context;
         public static IPlaywright _playwright;
         public static IBrowser _browser;
         public static IPage _page;
+
+        public static String user
+        {
+            get
+            {
+                var username = Environment.GetEnvironmentVariable("SAUCE_USERNAME");
+                var secret_user = Environment.GetEnvironmentVariable("SECRET_USER");
+                if (username != null) return username;
+                if (secret_user != null) return secret_user;
+                else return ConfigurationManager.AppSettings["user"]; ;
+            }
+        }
+        public static String password
+        {
+            get
+            {
+                var pass = Environment.GetEnvironmentVariable("SAUCE_PASSWORD");
+                var secret_pass = Environment.GetEnvironmentVariable("SECRET_PASSWORD");
+                if (pass != null) return pass;
+                if (secret_pass != null) return secret_pass;
+                else return ConfigurationManager.AppSettings["password"]; ;
+            }
+        }
 
         public async Task<IPage> NavigateTo(string link)
         {
@@ -22,16 +46,11 @@ namespace PlaywrightTests
             });
             _context = await _browser.NewContextAsync(new BrowserNewContextOptions
             {
-                ViewportSize = new ViewportSize() { Width = 1920, Height = 1080}
+                ViewportSize = new ViewportSize() { Width = 1920, Height = 1080 }
             });
             _page = await _context.NewPageAsync();
-            await _page.GotoAsync(link, new PageGotoOptions() { Timeout = 90000});
+            await _page.GotoAsync(link, new PageGotoOptions() { Timeout = 90000 });
             return _page;
-        }
-        public async void Dispose()
-        {
-            //await _context.CloseAsync();
-            //await _browser.CloseAsync();
         }
     }
 }

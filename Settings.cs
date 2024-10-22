@@ -9,7 +9,5 @@
         public static string checkoutStepTwoLink => baseLink + "checkout-step-two.html";
         public static string checkoutCompleteLink => baseLink + "checkout-complete.html";
         public static string inventoryTitle => "Swag Labs";
-        public static string userName => "standard_user";
-        public static string userPass => "secret_sauce";
     }
 }
