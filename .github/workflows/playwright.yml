@@ -4,21 +4,25 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_call:
-    secrets:
-      secret:
+  workflow_dispatch:
+    inputs:
+      user:
+        description: 'enter user name'
+        required: true
+      password:
+        description: 'enter user password'
         required: true
 jobs:
   test:
     timeout-minutes: 60
     runs-on: windows-latest
     steps:
-     - name: check MYSECRET exists
+     - run: | 
+         echo "user: $USERNAME"
+         echo "password: $PASSWORD"
        env: 
-            super_secret: ${{ secrets.MYSECRET }}
-       if: ${{ env.super_secret == '' }}
-       run: echo "the secret MYSECRET has not been made"
-       shell: cmd
+         USERNAME: ${{inputs.user}}
+         PASSWORD: ${{inputs.password}}
      - uses: actions/checkout@v4
      - name: Setup dotnet
        uses: actions/setup-dotnet@v4
