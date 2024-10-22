@@ -19,10 +19,10 @@ jobs:
     runs-on: windows-latest
     steps:
      - run: | 
-         echo ::add-mask::${{ inputs.user }}
-         echo ::add-mask::${{ inputs.password }}
-         echo ::add-mask::${{ secrets.USER }}
-         echo ::add-mask::${{ secrets.PASSWORD }}
+         echo "::add-mask::${{ inputs.user }}"
+         echo "::add-mask::${{ inputs.password }}"
+         echo "${{ secrets.USER }}"
+         echo "${{ secrets.PASSWORD }}"
      - uses: actions/checkout@v4
      - name: Setup dotnet
        uses: actions/setup-dotnet@v4
@@ -33,4 +33,4 @@ jobs:
      - name: Ensure browsers are installed
        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
      - name: Run your tests
-       run: dotnet test --environment SAUCE_USERNAME=::add-mask::${{ inputs.user }} --environment SAUCE_PASSWORD=::add-mask::${{ inputs.password }} --environment SECRET_USER=${{ secrets.USER }} --environment SECRET_PASSWORD=${{ secrets.PASSWORD }}
+       run: dotnet test --environment SAUCE_USERNAME="::add-mask::${{ inputs.user }}" --environment SAUCE_PASSWORD="::add-mask::${{ inputs.password }}" --environment SECRET_USER="${{ secrets.USER }}" --environment SECRET_PASSWORD="${{ secrets.PASSWORD }}"
