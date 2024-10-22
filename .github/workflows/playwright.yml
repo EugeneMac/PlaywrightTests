@@ -33,4 +33,4 @@ jobs:
      - name: Ensure browsers are installed
        run: pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
      - name: Run your tests
-       run: dotnet test --environment SAUCE_USERNAME="::add-mask::${{ inputs.user }}" --environment SAUCE_PASSWORD="::add-mask::${{ inputs.password }}" --environment SECRET_USER="${{ secrets.USER }}" --environment SECRET_PASSWORD="${{ secrets.PASSWORD }}"
+       run: dotnet test --environment SAUCE_USERNAME="${{ inputs.user }}" --environment SAUCE_PASSWORD="${{ inputs.password }}" --environment SECRET_USER="${{ secrets.USER }}" --environment SECRET_PASSWORD="${{ secrets.PASSWORD }}"
